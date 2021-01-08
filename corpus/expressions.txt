@@ -703,6 +703,8 @@ fn main() {
   C::<D>::e();
   ::f();
   ::g::h();
+  crate::foo();
+  super::foo();
 }
 
 ---
@@ -722,7 +724,9 @@ fn main() {
           (identifier))
         (arguments))
       (call_expression (scoped_identifier (identifier)) (arguments))
-      (call_expression (scoped_identifier (scoped_identifier (identifier)) (identifier)) (arguments))))))
+      (call_expression (scoped_identifier (scoped_identifier (identifier)) (identifier)) (arguments))
+      (call_expression (scoped_identifier (crate) (identifier)) (arguments))
+      (call_expression (scoped_identifier (super) (identifier)) (arguments))))))
 
 ============================================
 Scoped functions with fully qualified syntax
