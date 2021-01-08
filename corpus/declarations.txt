@@ -16,12 +16,12 @@ pub mod english;
 ---
 
 (source_file
-  (mod_item (identifier))
-  (mod_item (identifier) (declaration_list))
-  (mod_item (identifier) (declaration_list
-    (mod_item (identifier) (declaration_list))
-    (mod_item (identifier) (declaration_list))))
-  (mod_item (visibility_modifier) (identifier)))
+  (item (mod_item (identifier)))
+  (item (mod_item (identifier) (mod_block)))
+  (item (mod_item (identifier) (mod_block
+    (item (mod_item (identifier) (mod_block)))
+    (item (mod_item (identifier) (mod_block))))))
+  (item (visibility_modifier) (mod_item (identifier))))
 
 ============================================
 Extern crate declarations
@@ -34,9 +34,9 @@ pub extern crate futures;
 ---
 
 (source_file
-  (extern_crate_declaration (crate) (identifier))
-  (extern_crate_declaration (crate) (identifier) (identifier))
-  (extern_crate_declaration (visibility_modifier) (crate) (identifier)))
+  (item (extern_crate_declaration (crate) (identifier)))
+  (item (extern_crate_declaration (crate) (identifier) (identifier)))
+  (item (visibility_modifier) (extern_crate_declaration (crate) (identifier))))
 
 ============================================
 Function declarations
@@ -73,111 +73,120 @@ fn accumulate(self) -> Machine<{State::Accumulate}> {}
 ---
 
 (source_file
-  (function_item
-    name: (identifier)
-    parameters: (parameters)
-    body: (block))
-  (function_item
-    name: (identifier)
-    parameters: (parameters
-      (parameter
-        pattern: (identifier)
-        type: (primitive_type))
-      (parameter
-        pattern: (identifier)
-        type: (primitive_type)))
-    return_type: (primitive_type)
-    body: (block
-      (return_expression
-        (binary_expression
-          left: (identifier)
-          right: (identifier)))))
-  (function_item
-    name: (identifier)
-    parameters: (parameters
-      (parameter
-        pattern: (identifier)
-        type: (reference_type
-          type: (primitive_type))))
-    body: (block
-      (macro_invocation
-        macro: (identifier)
-        (token_tree
-          (string_literal)
-          (identifier)))))
-  (function_item
-    name: (identifier)
-    parameters: (parameters)
-    return_type: (array_type
-      element: (primitive_type)
-      length: (integer_literal))
+  (item (function_item
+    (function_declaration
+      name: (identifier)
+      parameters: (parameters))
+    body: (block)))
+  (item (function_item
+    (function_declaration
+      name: (identifier)
+      parameters: (parameters
+        (parameter
+          pattern: (identifier)
+          type: (primitive_type))
+        (parameter
+          pattern: (identifier)
+          type: (primitive_type)))
+      return_type: (primitive_type))
+      body: (block
+        (return_expression
+          (binary_expression
+            left: (identifier)
+            right: (identifier))))))
+  (item (function_item
+    (function_declaration
+      name: (identifier)
+      parameters: (parameters
+        (parameter
+          pattern: (identifier)
+          type: (reference_type
+            type: (primitive_type)))))
+      body: (block
+        (macro_invocation
+          macro: (identifier)
+          (token_tree
+            (string_literal)
+            (identifier))))))
+  (item (function_item
+    (function_declaration
+      name: (identifier)
+      parameters: (parameters)
+      return_type: (array_type
+        element: (primitive_type)
+        length: (integer_literal)))
     body: (block
       (return_expression
         (array_expression
           (integer_literal)
-          (integer_literal)))))
-  (function_item
-    name: (identifier)
-    parameters: (parameters)
-    return_type: (tuple_type
-      (primitive_type)
-      (primitive_type))
+          (integer_literal))))))
+  (item (function_item
+    (function_declaration
+      name: (identifier)
+      parameters: (parameters)
+      return_type: (tuple_type
+        (primitive_type)
+        (primitive_type)))
     body: (block
       (return_expression
         (tuple_expression
           (integer_literal)
-          (integer_literal)))))
-  (function_item
-    name: (identifier)
-    parameters: (parameters)
+          (integer_literal))))))
+  (item (function_item
+    (function_declaration
+      name: (identifier)
+      parameters: (parameters))
     body: (block
-      (return_expression)))
-  (function_item
-    name: (identifier)
-    parameters: (parameters
-      (parameter
-        pattern: (identifier)
-        type: (abstract_type
-          trait: (function_type
-            trait: (type_identifier)
-            parameters: (parameters)
-            return_type: (generic_type
-              type: (scoped_type_identifier
-                path: (identifier)
-                name: (type_identifier))
-              type_arguments: (type_arguments
-                (type_identifier)
-                (type_identifier)))))))
-    body: (block))
-  (function_item
-    name: (identifier)
-    parameters: (parameters
-      (attribute_item
-        (meta_item
-          (identifier)))
-      (parameter
-        pattern: (identifier)
-        type: (primitive_type))
-      (attribute_item
-        (meta_item
-          (identifier)))
-      (parameter
-        pattern: (identifier)
-        type: (primitive_type)))
-    body: (block))
-  (function_item
-    name: (identifier)
-    parameters: (parameters
-      (self_parameter
-        (self)))
-    return_type: (generic_type
-      type: (type_identifier)
-      type_arguments: (type_arguments
-        (block
-          (scoped_identifier
-            path: (identifier)
-            name: (identifier)))))
+      (return_expression))))
+  (item (function_item
+    (function_declaration
+      name: (identifier)
+      parameters: (parameters
+        (parameter
+          pattern: (identifier)
+          type: (abstract_type
+            trait: (function_type
+              trait: (type_identifier)
+              parameters: (parameters)
+              return_type: (generic_type
+                type: (scoped_type_identifier
+                  path: (identifier)
+                  name: (type_identifier))
+                type_arguments: (type_arguments
+                  (type_identifier)
+                  (type_identifier))))))))
     body: (block)))
+  (item (function_item
+    (function_declaration
+      name: (identifier)
+      parameters: (parameters
+        (outer_attribute_item
+          (meta_item
+            (identifier)))
+        (parameter
+          pattern: (identifier)
+          type: (primitive_type))
+        (outer_attribute_item
+          (meta_item
+            (identifier)))
+        (parameter
+          pattern: (identifier)
+          type: (primitive_type))))
+    body: (block)))
+  (item (function_item
+    (function_declaration
+      name: (identifier)
+      parameters: (parameters
+        (self_parameter
+          (self)))
+      return_type: (generic_type
+        type: (type_identifier)
+        type_arguments: (type_arguments
+          (block
+            (scoped_identifier
+              path: (identifier)
+              name: (identifier))))))
+    body: (block))))
 
 ============================================
 Const function declarations
@@ -188,7 +197,7 @@ const fn main() {}
 ---
 
 (source_file
-  (function_item (function_modifiers) (identifier) (parameters) (block)))
+  (item (function_item (function_modifiers) (function_declaration (identifier) (parameters)) (block))))
 
 ============================================
 Functions with abstract return types
@@ -200,16 +209,17 @@ fn triples(a: impl B) -> impl Iterator<Item=(usize)> {
 ---
 
 (source_file
-  (function_item
-    (identifier)
-    (parameters
-      (parameter
-        (identifier)
-        (abstract_type (type_identifier))))
-    (abstract_type (generic_type
-      (type_identifier)
-      (type_arguments (type_binding (type_identifier) (tuple_type (primitive_type))))))
-    (block)))
+  (item (function_item
+    (function_declaration
+      (identifier)
+      (parameters
+        (parameter
+          (identifier)
+          (abstract_type (type_identifier))))
+      (abstract_type (generic_type
+        (type_identifier)
+        (type_arguments (type_binding (type_identifier) (tuple_type (primitive_type)))))))
+    (block))))
 
 ============================================
 Diverging functions
@@ -221,11 +231,12 @@ fn aborts() -> ! {
 ---
 
 (source_file
-  (function_item
-    (identifier)
-    (parameters)
-    (empty_type)
-    (block)))
+  (item (function_item
+    (function_declaration
+      (identifier)
+      (parameters)
+      (empty_type))
+    (block))))
 
 ============================================
 Extern function declarations
@@ -240,16 +251,18 @@ extern "C" fn printf(
 ---
 
 (source_file
-  (function_item
+  (item (function_item
     (function_modifiers (extern_modifier (string_literal)))
-    (identifier)
-    (parameters)
-    (block))
-  (function_item
-    (function_modifiers (extern_modifier (string_literal)))
-    (identifier)
-    (parameters (pointer_type (type_identifier)) (variadic_parameter))
+    (function_declaration
+      (identifier)
+      (parameters))
     (block)))
+  (item (function_item
+    (function_modifiers (extern_modifier (string_literal)))
+    (function_declaration
+      (identifier)
+      (parameters (pointer_type (type_identifier)) (variadic_parameter)))
+    (block))))
 
 ============================================
 Use declarations
@@ -270,49 +283,50 @@ use my::{*};
 ---
 
 (source_file
-  (use_declaration
-    argument: (identifier))
-  (use_declaration
+  (item (use_declaration
+    argument: (identifier)))
+  (item (use_declaration
     argument: (scoped_identifier
       path: (identifier)
-      name: (identifier)))
-  (use_declaration
+      name: (identifier))))
+  (item (use_declaration
     argument: (scoped_identifier
       path: (scoped_identifier
         path: (identifier)
         name: (identifier))
-      name: (identifier)))
-  (use_declaration
+      name: (identifier))))
+  (item (use_declaration
     argument: (use_as_clause
       path: (scoped_identifier
         path: (scoped_identifier
           path: (identifier)
           name: (identifier))
         name: (identifier))
-      alias: (identifier)))
-  (use_declaration
+      alias: (identifier))))
+  (item (use_declaration
     argument: (scoped_use_list
       path: (scoped_identifier
         path: (identifier)
         name: (identifier))
       list: (use_list
         (identifier)
-        (identifier))))
-  (use_declaration
+        (identifier)))))
+  (item (use_declaration
     argument: (use_wildcard
       (scoped_identifier
         path: (scoped_identifier
           path: (identifier)
           name: (identifier))
-        name: (identifier))))
-  (use_declaration
+        name: (identifier)))))
+  (item
     (visibility_modifier)
-    argument: (scoped_identifier
-      path: (scoped_identifier
-        path: (self)
-        name: (identifier))
-      name: (identifier)))
-  (use_declaration
+    (use_declaration
+      argument: (scoped_identifier
+        path: (scoped_identifier
+          path: (self)
+          name: (identifier))
+        name: (identifier))))
+  (item (use_declaration
     argument: (scoped_use_list
       path: (scoped_identifier
         path: (identifier)
@@ -324,8 +338,8 @@ use my::{*};
           alias: (identifier))
         (use_as_clause
           path: (identifier)
-          alias: (identifier)))))
-  (use_declaration
+          alias: (identifier))))))
+  (item (use_declaration
     argument: (scoped_use_list
       path: (identifier)
       list: (use_list
@@ -333,43 +347,47 @@ use my::{*};
           path: (identifier)
           list: (use_list
             (identifier)
-            (identifier))))))
-  (use_declaration
+            (identifier)))))))
+  (item (use_declaration
     argument: (scoped_use_list
       path: (identifier)
       list: (use_list
         (use_wildcard
-          (identifier)))))
-  (use_declaration
+          (identifier))))))
+  (item (use_declaration
     argument: (scoped_use_list
       path: (identifier)
       list: (use_list
-        (use_wildcard)))))
+        (use_wildcard))))))
 
 ============================================
 Variable bindings
 ============================================
 
-let x;
-let x = 42;
-let x: i32;
-let x: i8 = 42;
-let mut x = 5;
-let y: bool = false;
-let bool: bool = false;
-let u32: str = "";
+fn main() {
+  let x;
+  let x = 42;
+  let x: i32;
+  let x: i8 = 42;
+  let mut x = 5;
+  let y: bool = false;
+  let bool: bool = false;
+  let u32: str = "";
+}
 
 ---
 
 (source_file
-  (let_declaration (identifier))
-  (let_declaration (identifier) (integer_literal))
-  (let_declaration (identifier) (primitive_type))
-  (let_declaration (identifier) (primitive_type) (integer_literal))
-  (let_declaration (mutable_specifier) (identifier) (integer_literal))
-  (let_declaration (identifier) (primitive_type) (boolean_literal))
-  (let_declaration (identifier) (primitive_type) (boolean_literal))
-  (let_declaration (identifier) (primitive_type) (string_literal)))
+  (item (function_item
+    (function_declaration (identifier) (parameters)) (block
+      (let_declaration (identifier))
+      (let_declaration (identifier) (integer_literal))
+      (let_declaration (identifier) (primitive_type))
+      (let_declaration (identifier) (primitive_type) (integer_literal))
+      (let_declaration (mutable_specifier) (identifier) (integer_literal))
+      (let_declaration (identifier) (primitive_type) (boolean_literal))
+      (let_declaration (identifier) (primitive_type) (boolean_literal))
+      (let_declaration (identifier) (primitive_type) (string_literal))))))
 
 ============================================
 Structs
@@ -390,19 +408,19 @@ struct Inches(i32);
 ---
 
 (source_file
-  (struct_item (type_identifier))
-  (struct_item (type_identifier) (field_declaration_list))
-  (struct_item (type_identifier) (field_declaration_list
+  (item (struct_item (type_identifier)))
+  (item (struct_item (type_identifier) (field_declaration_list)))
+  (item (struct_item (type_identifier) (field_declaration_list
     (field_declaration (visibility_modifier) (field_identifier) (type_identifier))
-    (field_declaration (visibility_modifier) (field_identifier) (primitive_type))))
-  (struct_item (type_identifier) (field_declaration_list
+    (field_declaration (visibility_modifier) (field_identifier) (primitive_type)))))
+  (item (struct_item (type_identifier) (field_declaration_list
     (field_declaration (field_identifier) (primitive_type))
-    (attribute_item (meta_item (identifier)))
-    (field_declaration (field_identifier) (primitive_type))))
-  (struct_item (type_identifier) (ordered_field_declaration_list
-    (visibility_modifier) (primitive_type) (primitive_type) (primitive_type)))
-  (struct_item (type_identifier) (ordered_field_declaration_list
-    (primitive_type))))
+    (outer_attribute_item (meta_item (identifier)))
+    (field_declaration (field_identifier) (primitive_type)))))
+  (item (struct_item (type_identifier) (ordered_field_declaration_list
+    (visibility_modifier) (primitive_type) (primitive_type) (primitive_type))))
+  (item (struct_item (type_identifier) (ordered_field_declaration_list
+    (primitive_type)))))
 
 ============================================
 Unions
@@ -418,11 +436,11 @@ pub union in6_addr__bindgen_ty_1 {
 ---
 
 (source_file
-  (union_item (visibility_modifier) (type_identifier) (field_declaration_list
+  (item (visibility_modifier) (union_item (type_identifier) (field_declaration_list
     (field_declaration (visibility_modifier) (field_identifier) (array_type (type_identifier) (integer_literal)))
     (field_declaration (visibility_modifier) (field_identifier) (array_type (type_identifier) (integer_literal)))
     (field_declaration (visibility_modifier) (field_identifier) (array_type (type_identifier) (integer_literal)))
-    (field_declaration (field_identifier) (array_type (primitive_type) (integer_literal))))))
+    (field_declaration (field_identifier) (array_type (primitive_type) (integer_literal)))))))
 
 ============================================
 Generic structs
@@ -436,32 +454,32 @@ struct D<const SIZE: usize> {}
 ---
 
 (source_file
-  (struct_item
+  (item (struct_item
     name: (type_identifier)
     type_parameters: (type_parameters
       (type_identifier))
-    body: (field_declaration_list))
-  (struct_item
+    body: (field_declaration_list)))
+  (item (struct_item
     name: (type_identifier)
     type_parameters: (type_parameters
       (lifetime
         (identifier))
       (lifetime
         (identifier)))
-    body: (field_declaration_list))
-  (struct_item
+    body: (field_declaration_list)))
+  (item (struct_item
     name: (type_identifier)
     type_parameters: (type_parameters
       (lifetime
         (identifier)))
-    body: (field_declaration_list))
-  (struct_item
+    body: (field_declaration_list)))
+  (item (struct_item
     name: (type_identifier)
     type_parameters: (type_parameters
       (const_parameter
         name: (identifier)
         type: (primitive_type)))
-    body: (field_declaration_list)))
+    body: (field_declaration_list))))
 
 ============================================
 Enums
@@ -487,34 +505,36 @@ pub enum Node<T: Item> {
 ---
 
 (source_file
-  (enum_item
+  (item
     (visibility_modifier)
-    (type_identifier)
-    (type_parameters (type_identifier))
-    (enum_variant_list
-      (enum_variant (identifier))
-      (enum_variant (identifier) (ordered_field_declaration_list (type_identifier)))))
-  (enum_item
-    (visibility_modifier)
-    (type_identifier)
-    (type_parameters (constrained_type_parameter
+    (enum_item
       (type_identifier)
-      (trait_bounds (type_identifier))))
-    (enum_variant_list
-      (enum_variant
-        (identifier)
-        (field_declaration_list
-          (field_declaration (field_identifier) (generic_type
-            (type_identifier)
-            (type_arguments
-              (generic_type (type_identifier) (type_arguments (type_identifier))))))
-          (field_declaration (field_identifier) (primitive_type))))
-      (attribute_item (meta_item (identifier)))
-      (attribute_item (meta_item (identifier)))
-      (enum_variant
-        (identifier)
-        (field_declaration_list
-          (field_declaration (field_identifier) (type_identifier)))))))
+      (type_parameters (type_identifier))
+      (enum_variant_list
+        (enum_variant (identifier))
+        (enum_variant (identifier) (ordered_field_declaration_list (type_identifier))))))
+  (item
+    (visibility_modifier)
+    (enum_item
+      (type_identifier)
+      (type_parameters (constrained_type_parameter
+        (type_identifier)
+        (trait_bounds (type_identifier))))
+      (enum_variant_list
+        (enum_variant
+          (identifier)
+          (field_declaration_list
+            (field_declaration (field_identifier) (generic_type
+              (type_identifier)
+              (type_arguments
+                (generic_type (type_identifier) (type_arguments (type_identifier))))))
+            (field_declaration (field_identifier) (primitive_type))))
+        (outer_attribute_item (meta_item (identifier)))
+        (outer_attribute_item (meta_item (identifier)))
+        (enum_variant
+          (identifier)
+          (field_declaration_list
+            (field_declaration (field_identifier) (type_identifier))))))))
 
 ============================================
 Enums with values specified
@@ -528,12 +548,11 @@ pub enum c_style_enum {
 ---
 
 (source_file
-  (enum_item
-    (visibility_modifier)
+  (item (visibility_modifier) (enum_item
     (type_identifier)
     (enum_variant_list
       (enum_variant (identifier) (integer_literal))
-      (enum_variant (identifier) (integer_literal)))))
+      (enum_variant (identifier) (integer_literal))))))
 
 ============================================
 Generic functions
@@ -546,43 +565,47 @@ pub fn uninit_array<const LEN: usize>() -> [Self; LEN] {}
 ---
 
 (source_file
-  (function_item
+  (item
     (visibility_modifier)
-    name: (identifier)
-    type_parameters: (type_parameters
-      (constrained_type_parameter
-        left: (type_identifier)
-        bounds: (trait_bounds
-          (generic_type
-            type: (type_identifier)
-            type_arguments: (type_arguments
-              (type_identifier))))))
-    parameters: (parameters
-      (self_parameter
-        (mutable_specifier)
-        (self))
-      (parameter
-        pattern: (identifier)
-        type: (generic_type
-          type: (type_identifier)
-          type_arguments: (type_arguments
-            (primitive_type))))
-      (parameter
-        pattern: (identifier)
-        type: (type_identifier)))
-    body: (block))
-  (function_item
-    (visibility_modifier)
-    name: (identifier)
-    type_parameters: (type_parameters
-      (const_parameter
+    (function_item
+      (function_declaration
         name: (identifier)
-        type: (primitive_type)))
-    parameters: (parameters)
-    return_type: (array_type
-      element: (type_identifier)
-      length: (identifier))
-    body: (block)))
+        type_parameters: (type_parameters
+          (constrained_type_parameter
+            left: (type_identifier)
+            bounds: (trait_bounds
+              (generic_type
+                type: (type_identifier)
+                type_arguments: (type_arguments
+                  (type_identifier))))))
+        parameters: (parameters
+          (self_parameter
+            (mutable_specifier)
+            (self))
+          (parameter
+            pattern: (identifier)
+            type: (generic_type
+              type: (type_identifier)
+              type_arguments: (type_arguments
+                (primitive_type))))
+          (parameter
+            pattern: (identifier)
+            type: (type_identifier))))
+      body: (block)))
+  (item
+    (visibility_modifier)
+    (function_item
+      (function_declaration
+        name: (identifier)
+        type_parameters: (type_parameters
+          (const_parameter
+            name: (identifier)
+            type: (primitive_type)))
+        parameters: (parameters)
+        return_type: (array_type
+          element: (type_identifier)
+          length: (identifier)))
+      body: (block))))
 
 ============================================
 Functions with mutable parameters
@@ -594,10 +617,11 @@ fn foo(mut x : u32) {
 ---
 
 (source_file
-  (function_item
-    (identifier)
-    (parameters (parameter (mutable_specifier) (identifier) (primitive_type)))
-    (block)))
+  (item (function_item
+    (function_declaration
+      (identifier)
+      (parameters (parameter (mutable_specifier) (identifier) (primitive_type))))
+    (block))))
 
 ============================================
 Functions with destructured parameters
@@ -610,27 +634,30 @@ fn f3((x, y): (T, U)) {}
 ---
 
 (source_file
-  (function_item
-    (identifier)
-    (parameters
-      (parameter
-        (slice_pattern (identifier) (identifier))
-        (array_type (primitive_type) (integer_literal))))
-    (block))
-  (function_item
-    (identifier)
-    (parameters
-      (parameter
-        (reference_pattern (identifier))
-        (reference_type (type_identifier))))
-    (block))
-  (function_item
-    (identifier)
-    (parameters
-      (parameter
-        (tuple_pattern (identifier) (identifier))
-        (tuple_type (type_identifier) (type_identifier))))
+  (item (function_item
+    (function_declaration
+      (identifier)
+      (parameters
+        (parameter
+          (slice_pattern (identifier) (identifier))
+          (array_type (primitive_type) (integer_literal)))))
     (block)))
+  (item (function_item
+    (function_declaration
+      (identifier)
+      (parameters
+        (parameter
+          (reference_pattern (identifier))
+          (reference_type (type_identifier)))))
+    (block)))
+  (item (function_item
+    (function_declaration
+      (identifier)
+      (parameters
+        (parameter
+          (tuple_pattern (identifier) (identifier))
+          (tuple_type (type_identifier) (type_identifier)))))
+    (block))))
 
 ============================================
 Functions with custom types for self
@@ -643,15 +670,17 @@ trait Callback {
 ---
 
 (source_file
-  (trait_item
+  (item (trait_item
     (type_identifier)
-    (declaration_list
-      (function_signature_item
-        (identifier)
-        (parameters
-          (parameter
-            (self)
-            (generic_type (type_identifier) (type_arguments (type_identifier)))))))))
+    (trait_block
+      (trait_block_item
+        (function_signature_with_default_item
+          (function_declaration
+            (identifier)
+            (parameters
+              (parameter
+                (self)
+                (generic_type (type_identifier) (type_arguments (type_identifier))))))))))))
 
 ============================================
 Constant items
@@ -666,10 +695,12 @@ trait Foo {
 ---
 
 (source_file
-  (const_item (identifier) (primitive_type) (integer_literal))
-  (trait_item
+  (item (const_item (identifier) (primitive_type) (integer_literal)))
+  (item (trait_item
     (type_identifier)
-    (declaration_list (const_item (identifier) (primitive_type)))))
+    (trait_block
+      (trait_block_item
+        (const_item (identifier) (primitive_type)))))))
 
 ============================================
 Static items
@@ -681,14 +712,14 @@ static mut __progname: *mut ::c_char;
 ---
 
 (source_file
-  (static_item
+  (item (static_item
     (identifier)
     (primitive_type)
-    (integer_literal))
-  (static_item
+    (integer_literal)))
+  (item (static_item
     (mutable_specifier)
     (identifier)
-    (pointer_type (mutable_specifier) (scoped_type_identifier (type_identifier)))))
+    (pointer_type (mutable_specifier) (scoped_type_identifier (type_identifier))))))
 
 ============================================
 Static 'ref' items using lazy_static
@@ -699,7 +730,7 @@ static ref ONE: usize = 0;
 ---
 
 (source_file
-  (static_item (identifier) (primitive_type) (integer_literal)))
+  (item (static_item (identifier) (primitive_type) (integer_literal))))
 
 ============================================
 Type aliases
@@ -711,8 +742,8 @@ type Name<T> = Vec<T>;
 ---
 
 (source_file
-  (type_item (type_identifier) (primitive_type))
-  (type_item (type_identifier) (type_parameters (type_identifier)) (generic_type (type_identifier) (type_arguments (type_identifier)))))
+  (item (type_item (type_identifier) (primitive_type)))
+  (item (type_item (type_identifier) (type_parameters (type_identifier)) (generic_type (type_identifier) (type_arguments (type_identifier))))))
 
 ============================================
 Empty statements
@@ -725,12 +756,14 @@ fn main() {
 ---
 
 (source_file
-  (function_item (identifier) (parameters) (block
-    (empty_statement))))
+  (item (function_item (function_declaration (identifier) (parameters)) (block
+    (item (empty_statement))))))
 
 ============================================
 Attributes
 ============================================
+
+#![allow(clippy::useless_transmute)]
 
 #[test]
 fn test_foo() {}
@@ -744,41 +777,12 @@ struct Foo;
 #[cfg(target_os = "macos")]
 mod macos_only {}
 
-#![allow(clippy::useless_transmute)]
-
 #[clippy::cyclomatic_complexity = "100"]
+struct Bar;
 
 ---
 
 (source_file
-  (attribute_item (meta_item (identifier)))
-  (function_item
-    name: (identifier)
-    parameters: (parameters)
-    body: (block))
-
-  (attribute_item (meta_item
-    (identifier)
-    arguments: (meta_arguments (meta_item (identifier)))))
-  (struct_item name: (type_identifier))
-
-  (attribute_item (meta_item
-    (identifier)
-    arguments: (meta_arguments
-      (meta_item (identifier))
-      (meta_item (identifier)))))
-  (struct_item name: (type_identifier))
-
-  (attribute_item (meta_item
-    (identifier)
-    arguments: (meta_arguments
-      (meta_item
-        (identifier)
-        value: (string_literal)))))
-  (mod_item
-    name: (identifier)
-    body: (declaration_list))
-
   (inner_attribute_item (meta_item
     (identifier)
     arguments: (meta_arguments (meta_item
@@ -786,11 +790,46 @@ mod macos_only {}
         path: (identifier)
         name: (identifier))))))
 
-  (attribute_item (meta_item
-    (scoped_identifier
-      path: (identifier)
-      name: (identifier))
-    value: (string_literal))))
+  (item
+    (outer_attribute_item (meta_item (identifier)))
+    (function_item
+      (function_declaration
+        name: (identifier)
+        parameters: (parameters))
+      body: (block)))
+
+  (item
+    (outer_attribute_item (meta_item
+      (identifier)
+      arguments: (meta_arguments (meta_item (identifier)))))
+    (struct_item name: (type_identifier)))
+
+  (item
+    (outer_attribute_item (meta_item
+      (identifier)
+      arguments: (meta_arguments
+        (meta_item (identifier))
+        (meta_item (identifier)))))
+    (struct_item name: (type_identifier)))
+
+  (item
+    (outer_attribute_item (meta_item
+      (identifier)
+      arguments: (meta_arguments
+        (meta_item
+          (identifier)
+          value: (string_literal)))))
+    (mod_item
+      name: (identifier)
+      body: (mod_block)))
+
+  (item
+    (outer_attribute_item (meta_item
+      (scoped_identifier
+        path: (identifier)
+        name: (identifier))
+      value: (string_literal)))
+    (struct_item name: (type_identifier))))
 
 ============================================
 Inner attributes
@@ -803,14 +842,14 @@ mod macos_only {
 ---
 
 (source_file
-  (mod_item
+  (item (mod_item
     name: (identifier)
-    body: (declaration_list
+    body: (mod_block
       (inner_attribute_item (meta_item
         (identifier)
         arguments: (meta_arguments (meta_item
           (identifier)
-          value: (string_literal))))))))
+          value: (string_literal)))))))))
 
 ============================================
 Attributes and Expressions
@@ -827,15 +866,16 @@ fn foo() {
 ---
 
 (source_file
-  (function_item
-    name: (identifier)
-    parameters: (parameters)
+  (item (function_item
+    (function_declaration
+      name: (identifier)
+      parameters: (parameters))
     body: (block
       (call_expression
         function: (identifier)
         arguments: (arguments
           (identifier)
-            (attribute_item (meta_item
+            (outer_attribute_item (meta_item
               (identifier)
               arguments: (meta_arguments (meta_item
                 (identifier)
@@ -844,17 +884,17 @@ fn foo() {
       (let_declaration
         pattern: (identifier)
         value: (array_expression
-          (attribute_item (meta_item (identifier)))
+          (outer_attribute_item (meta_item (identifier)))
           (integer_literal)
           (integer_literal)
           (integer_literal)))
       (let_declaration
         pattern: (identifier)
         value: (tuple_expression
-          (attribute_item (meta_item (identifier)))
+          (outer_attribute_item (meta_item (identifier)))
           (integer_literal)
           (integer_literal)
-          (integer_literal))))))
+          (integer_literal)))))))
 
 ===========================================
 Inherent Impls
@@ -874,42 +914,46 @@ impl Machine<{State::Init}> {}
 ---
 
 (source_file
-  (impl_item
+  (item (impl_item
     type: (type_identifier)
-    body: (declaration_list
-      (const_item
+    body: (impl_block
+      (impl_block_item (impl_block_item_const
         name: (identifier)
         type: (primitive_type)
-        value: (integer_literal))
-      (function_item
-        name: (identifier)
-        parameters: (parameters
-          (self_parameter
-            (self)))
-        body: (block))
-      (function_item
-        name: (identifier)
-        parameters: (parameters
-          (self_parameter
-            (mutable_specifier)
-            (self)))
-        body: (block))
-      (function_item
-        name: (identifier)
-        parameters: (parameters
-          (self_parameter
-            (self)))
-        body: (block))
-      (function_item
-        name: (identifier)
-        parameters: (parameters
-          (self_parameter
-            (lifetime
-              (identifier))
-            (mutable_specifier)
-            (self)))
-        body: (block))))
-  (impl_item
+        value: (integer_literal)))
+      (impl_block_item (function_item
+        (function_declaration
+          name: (identifier)
+          parameters: (parameters
+            (self_parameter
+              (self))))
+        body: (block)))
+      (impl_block_item (function_item
+        (function_declaration
+          name: (identifier)
+          parameters: (parameters
+            (self_parameter
+              (mutable_specifier)
+              (self))))
+        body: (block)))
+      (impl_block_item (function_item
+        (function_declaration
+          name: (identifier)
+          parameters: (parameters
+            (self_parameter
+              (self))))
+        body: (block)))
+      (impl_block_item (function_item
+        (function_declaration
+          name: (identifier)
+          parameters: (parameters
+            (self_parameter
+              (lifetime
+                (identifier))
+              (mutable_specifier)
+              (self))))
+        body: (block))))))
+  (item (impl_item
     type: (generic_type
       type: (type_identifier)
       type_arguments: (type_arguments
@@ -917,7 +961,7 @@ impl Machine<{State::Init}> {}
           (scoped_identifier
             path: (identifier)
             name: (identifier)))))
-    body: (declaration_list)))
+    body: (impl_block))))
 
 ===========================================
 Trait impls
@@ -933,7 +977,7 @@ impl ConvertTo<i64> for i32 {
 ---
 
 (source_file
-  (impl_item
+  (item (impl_item
     type_parameters: (type_parameters (lifetime (identifier)))
     trait: (scoped_type_identifier
       path: (identifier)
@@ -943,21 +987,22 @@ impl ConvertTo<i64> for i32 {
         path: (identifier)
         name: (type_identifier))
       type_arguments: (type_arguments (lifetime (identifier))))
-    body: (declaration_list))
-  (impl_item
+    body: (impl_block)))
+  (item (impl_item
     trait: (generic_type
       type: (type_identifier)
       type_arguments: (type_arguments (primitive_type)))
     type: (primitive_type)
-    body: (declaration_list
-      (function_item
-        name: (identifier)
-        parameters: (parameters (self_parameter (self)))
-        return_type: (primitive_type)
+    body: (impl_block
+      (impl_block_item (function_item
+        (function_declaration
+          name: (identifier)
+          parameters: (parameters (self_parameter (self)))
+          return_type: (primitive_type))
         body: (block
           (type_cast_expression
             value: (unary_expression (self))
-            type: (primitive_type)))))))
+            type: (primitive_type)))))))))
 
 ===========================================
 Unsafe impls
@@ -968,7 +1013,7 @@ unsafe impl Foo {
 
 ---
 
-(source_file (impl_item (type_identifier) (declaration_list)))
+(source_file (item (impl_item (type_identifier) (impl_block))))
 
 ===========================================
 Impls with default functions
@@ -984,17 +1029,19 @@ impl Foo {
 ---
 
 (source_file
-  (impl_item (type_identifier) (declaration_list
-    (function_item
-      (function_modifiers)
-      (identifier)
-      (parameters)
-      (primitive_type)
-      (block
-        (line_comment)
-        (call_expression
-          (field_expression (identifier) (field_identifier))
-          (arguments)))))))
+  (item (impl_item (type_identifier) (impl_block
+    (impl_block_item
+      (function_item
+        (function_modifiers)
+        (function_declaration
+          (identifier)
+          (parameters)
+          (primitive_type))
+        (block
+          (line_comment)
+          (call_expression
+            (field_expression (identifier) (field_identifier))
+            (arguments)))))))))
 
 ============================================
 Trait declarations
@@ -1009,19 +1056,21 @@ unsafe trait Foo { }
 ---
 
 (source_file
-  (trait_item
-    (visibility_modifier)
-    (type_identifier)
-    (trait_bounds
+  (item (visibility_modifier)
+    (trait_item
       (type_identifier)
-      (type_identifier)
-      (scoped_type_identifier (identifier) (type_identifier)))
-    (declaration_list
-      (function_signature_item
-        (identifier)
-        (parameters (self_parameter (self)))
-        (scoped_type_identifier (identifier) (type_identifier)))))
-   (trait_item (type_identifier) (declaration_list)))
+      (trait_bounds
+        (type_identifier)
+        (type_identifier)
+        (scoped_type_identifier (identifier) (type_identifier)))
+      (trait_block
+        (trait_block_item
+          (function_signature_with_default_item
+            (function_declaration
+              (identifier)
+              (parameters (self_parameter (self)))
+              (scoped_type_identifier (identifier) (type_identifier))))))))
+   (item (trait_item (type_identifier) (trait_block))))
 
 ============================================
 Trait declarations with optional type parameters
@@ -1035,15 +1084,17 @@ trait Add<RHS=Self> {
 ---
 
 (source_file
-  (trait_item
+  (item (trait_item
     (type_identifier)
     (type_parameters (optional_type_parameter (type_identifier) (type_identifier)))
-    (declaration_list
-      (associated_type (type_identifier))
-      (function_signature_item
-        (identifier)
-        (parameters (self_parameter (self)) (parameter (identifier) (type_identifier)))
-        (scoped_type_identifier (identifier) (type_identifier))))))
+    (trait_block
+      (trait_block_item (associated_type (type_identifier)))
+      (trait_block_item
+      (function_signature_with_default_item
+        (function_declaration
+          (identifier)
+          (parameters (self_parameter (self)) (parameter (identifier) (type_identifier)))
+          (scoped_type_identifier (identifier) (type_identifier)))))))))
 
 ============================================
 Unsized types in trait bounds
@@ -1055,13 +1106,13 @@ trait Foo<T: ?Sized> {
 ---
 
 (source_file
-  (trait_item
+  (item (trait_item
     (type_identifier)
     (type_parameters
       (constrained_type_parameter
         (type_identifier)
         (trait_bounds (removed_trait_bound (type_identifier)))))
-    (declaration_list)))
+    (trait_block))))
 
 ============================================
 Macro invocations inside trait declarations
@@ -1076,13 +1127,14 @@ pub trait A: B + C + D {
 ---
 
 (source_file
-  (trait_item
+  (item
     (visibility_modifier)
-    (type_identifier)
-    (trait_bounds (type_identifier) (type_identifier) (type_identifier))
-    (declaration_list
-      (macro_invocation (identifier) (token_tree))
-      (function_signature_item (identifier) (parameters (self_parameter (self)))))))
+    (trait_item
+      (type_identifier)
+      (trait_bounds (type_identifier) (type_identifier) (type_identifier))
+      (trait_block
+        (trait_block_item (macro_invocation (identifier) (token_tree)))
+        (trait_block_item (function_signature_with_default_item (function_declaration (identifier) (parameters (self_parameter (self))))))))))
 
 ============================================
 Associated Types
@@ -1096,12 +1148,13 @@ pub trait Graph {
 ---
 
 (source_file
-  (trait_item
+  (item
     (visibility_modifier)
-    (type_identifier)
-    (declaration_list
-      (associated_type (type_identifier) (trait_bounds (scoped_type_identifier (identifier) (type_identifier))))
-      (associated_type (type_identifier)))))
+    (trait_item
+      (type_identifier)
+      (trait_block
+        (trait_block_item (associated_type (type_identifier) (trait_bounds (scoped_type_identifier (identifier) (type_identifier)))))
+        (trait_block_item (associated_type (type_identifier)))))))
 
 =====================
 Higher-ranked types
@@ -1113,13 +1166,13 @@ trait T: for<'a> AddAssign<&'a usize> {
 ---
 
 (source_file
-  (trait_item
+  (item (trait_item
     (type_identifier)
     (trait_bounds
       (higher_ranked_trait_bound
         (type_parameters (lifetime (identifier)))
         (generic_type (type_identifier) (type_arguments (reference_type (lifetime (identifier)) (primitive_type))))))
-    (declaration_list)))
+    (trait_block))))
 
 =====================
 Visibility modifiers
@@ -1134,15 +1187,16 @@ pub(in crate::d) fn e() {}
 ---
 
 (source_file
-  (function_item (visibility_modifier) (identifier) (parameters) (block))
-  (function_item (visibility_modifier (super)) (identifier) (parameters) (block))
-  (function_item (visibility_modifier (self)) (identifier) (parameters) (block))
-  (function_item (visibility_modifier (crate)) (identifier) (parameters) (block))
-  (function_item
-    (visibility_modifier (scoped_identifier (crate) (identifier)))
-    (identifier)
-    (parameters)
-    (block)))
+  (item (visibility_modifier) (function_item (function_declaration (identifier) (parameters)) (block)))
+  (item (visibility_modifier (super)) (function_item (function_declaration (identifier) (parameters)) (block)))
+  (item (visibility_modifier (self)) (function_item (function_declaration (identifier) (parameters)) (block)))
+  (item (visibility_modifier (crate)) (function_item (function_declaration (identifier) (parameters)) (block)))
+  (item (visibility_modifier (scoped_identifier (crate) (identifier)))
+    (function_item
+      (function_declaration
+        (identifier)
+        (parameters))
+      (block))))
 
 ========================================================
 Function parameter names that match built-in type names
@@ -1154,8 +1208,8 @@ fn bar(bool: bool) {}
 ---
 
 (source_file
-  (function_item (identifier) (parameters (parameter (identifier) (pointer_type (type_identifier)))) (block))
-  (function_item (identifier) (parameters (parameter (identifier) (primitive_type))) (block)))
+  (item (function_item (function_declaration (identifier) (parameters (parameter (identifier) (pointer_type (type_identifier))))) (block)))
+  (item (function_item (function_declaration (identifier) (parameters (parameter (identifier) (primitive_type)))) (block))))
 
 
 =====================
@@ -1201,28 +1255,29 @@ impl<A> Default for B<A> where *mut A: C + D {}
 ---
 
 (source_file
-  (function_item
-    name: (identifier)
-    type_parameters: (type_parameters (type_identifier))
-    parameters: (parameters
-      (self_parameter (self))
-      (parameter
-        pattern: (identifier)
-        type: (reference_type
-          (mutable_specifier)
-          type: (type_identifier))))
-    return_type: (primitive_type)
-    (where_clause
-      (where_predicate
-        left: (type_identifier)
-        bounds: (trait_bounds
-          (function_type
-            trait: (type_identifier)
-            parameters: (parameters (reference_type type: (type_identifier)))
-            return_type: (primitive_type)))))
-    body: (block (return_expression (boolean_literal))))
+  (item (function_item
+    (function_declaration
+      name: (identifier)
+      type_parameters: (type_parameters (type_identifier))
+      parameters: (parameters
+        (self_parameter (self))
+        (parameter
+          pattern: (identifier)
+          type: (reference_type
+            (mutable_specifier)
+            type: (type_identifier))))
+      return_type: (primitive_type)
+      (where_clause
+        (where_predicate
+          left: (type_identifier)
+          bounds: (trait_bounds
+            (function_type
+              trait: (type_identifier)
+              parameters: (parameters (reference_type type: (type_identifier)))
+              return_type: (primitive_type))))))
+    body: (block (return_expression (boolean_literal)))))
 
-  (impl_item
+  (item (impl_item
     type_parameters: (type_parameters
       (lifetime (identifier))
       (constrained_type_parameter
@@ -1239,9 +1294,9 @@ impl<A> Default for B<A> where *mut A: C + D {}
     (where_clause (where_predicate
       left: (type_identifier)
       bounds: (trait_bounds (lifetime (identifier)))))
-    body: (declaration_list))
+    body: (impl_block)))
 
-  (impl_item
+  (item (impl_item
     type_parameters: (type_parameters (type_identifier))
     trait: (type_identifier)
     type: (generic_type
@@ -1259,9 +1314,9 @@ impl<A> Default for B<A> where *mut A: C + D {}
       (where_predicate
         left: (lifetime (identifier))
         bounds: (trait_bounds (lifetime (identifier)))))
-    body: (declaration_list))
+    body: (impl_block)))
 
-  (impl_item
+  (item (impl_item
     type_parameters: (type_parameters
       (lifetime (identifier))
       (type_identifier))
@@ -1272,9 +1327,9 @@ impl<A> Default for B<A> where *mut A: C + D {}
           (lifetime (identifier))
           type: (type_identifier))
         bounds: (trait_bounds (type_identifier))))
-    body: (declaration_list))
+    body: (impl_block)))
 
-  (impl_item
+  (item (impl_item
     type_parameters: (type_parameters (type_identifier))
     trait: (type_identifier)
     type: (generic_type
@@ -1284,9 +1339,9 @@ impl<A> Default for B<A> where *mut A: C + D {}
       (where_predicate
         left: (tuple_type (type_identifier) (type_identifier) (type_identifier))
         bounds: (trait_bounds (type_identifier))))
-    body: (declaration_list))
+    body: (impl_block)))
 
-  (impl_item
+  (item (impl_item
     type_parameters: (type_parameters (type_identifier))
     trait: (type_identifier)
     type: (generic_type
@@ -1303,37 +1358,39 @@ impl<A> Default for B<A> where *mut A: C + D {}
           (generic_type
             type: (type_identifier)
             type_arguments: (type_arguments (lifetime (identifier)))))))
-    body: (declaration_list))
+    body: (impl_block)))
 
-  (trait_item
+  (item
     (visibility_modifier)
-    name: (type_identifier)
-    type_parameters: (type_parameters (type_identifier))
-    (where_clause (where_predicate
-      left: (type_identifier)
-      bounds: (trait_bounds (type_identifier))))
-    body: (declaration_list))
-
-  (function_item
-    name: (identifier)
-    type_parameters: (type_parameters (type_identifier))
-    parameters: (parameters)
-    (where_clause
-      (where_predicate
+    (trait_item
+      name: (type_identifier)
+      type_parameters: (type_parameters (type_identifier))
+      (where_clause (where_predicate
         left: (type_identifier)
-        bounds: (trait_bounds
-          (type_identifier)
-          (generic_type
-            type: (type_identifier)
-            type_arguments: (type_arguments (primitive_type)))))
-      (where_predicate
-        left: (primitive_type)
-        bounds: (trait_bounds (generic_type
-          type: (type_identifier)
-          type_arguments: (type_arguments (type_identifier))))))
-    body: (block))
+        bounds: (trait_bounds (type_identifier))))
+      body: (trait_block)))
 
-  (impl_item
+  (item (function_item
+    (function_declaration
+      name: (identifier)
+      type_parameters: (type_parameters (type_identifier))
+      parameters: (parameters)
+      (where_clause
+        (where_predicate
+          left: (type_identifier)
+          bounds: (trait_bounds
+            (type_identifier)
+            (generic_type
+              type: (type_identifier)
+              type_arguments: (type_arguments (primitive_type)))))
+        (where_predicate
+          left: (primitive_type)
+          bounds: (trait_bounds (generic_type
+            type: (type_identifier)
+            type_arguments: (type_arguments (type_identifier)))))))
+    body: (block)))
+
+  (item (impl_item
     type_parameters: (type_parameters (type_identifier))
     trait: (type_identifier)
     type: (generic_type
@@ -1343,7 +1400,7 @@ impl<A> Default for B<A> where *mut A: C + D {}
       (where_predicate
         left: (pointer_type (mutable_specifier) type: (type_identifier))
         bounds: (trait_bounds (type_identifier) (type_identifier))))
-    body: (declaration_list)))
+    body: (impl_block))))
 
 ===================================
 External Modules
@@ -1358,9 +1415,17 @@ extern "C" {}
 ---
 
 (source_file
-  (foreign_mod_item (visibility_modifier) (extern_modifier) (declaration_list
-    (function_signature_item (visibility_modifier) (identifier) (parameters (parameter (identifier) (pointer_type (mutable_specifier) (type_identifier)))))))
-  (foreign_mod_item (extern_modifier (string_literal)) (declaration_list)))
+  (item (visibility_modifier)
+    (foreign_mod_item
+      (extern_modifier)
+      (foreign_mod_block
+        (foreign_block_item
+          (visibility_modifier)
+          (function_signature_with_default_item
+            (function_declaration
+              (identifier)
+              (parameters (parameter (identifier) (pointer_type (mutable_specifier) (type_identifier))))))))))
+  (item (foreign_mod_item (extern_modifier (string_literal)) (foreign_mod_block))))
 
 ===================================
 Crate visibility
@@ -1374,13 +1439,20 @@ crate const X: u32 = 0;
 ---
 
 (source_file
-  (mod_item
-    (visibility_modifier (crate)) (identifier))
-  (struct_item
+  (item
     (visibility_modifier (crate))
-    (type_identifier)
-    (ordered_field_declaration_list (visibility_modifier (crate)) (scoped_type_identifier (crate) (type_identifier))))
-  (function_item
-    (visibility_modifier (crate)) (identifier) (parameters) (block))
-  (const_item
-    (visibility_modifier (crate)) (identifier) (primitive_type) (integer_literal)))
+    (mod_item
+       (identifier)))
+  (item
+    (visibility_modifier (crate))
+    (struct_item
+      (type_identifier)
+      (ordered_field_declaration_list (visibility_modifier (crate)) (scoped_type_identifier (crate) (type_identifier)))))
+  (item
+    (visibility_modifier (crate))
+    (function_item
+       (function_declaration (identifier) (parameters)) (block)))
+  (item
+    (visibility_modifier (crate))
+    (const_item
+       (identifier) (primitive_type) (integer_literal))))

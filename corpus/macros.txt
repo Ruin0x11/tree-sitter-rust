@@ -2,57 +2,66 @@
 Macro invocation - no arguments
 ============================================
 
-a!();
-b![];
-c!{};
-d::e!();
-f::g::h!{};
+fn main() {
+  a!();
+  b![];
+  c!{};
+  d::e!();
+  f::g::h!{};
+}
+
+a!()
 
 ---
 
 (source_file
-  (macro_invocation (identifier) (token_tree))
-  (macro_invocation (identifier) (token_tree))
-  (macro_invocation (identifier) (token_tree))
-  (macro_invocation (scoped_identifier (identifier) (identifier)) (token_tree))
-  (macro_invocation (scoped_identifier (scoped_identifier (identifier) (identifier)) (identifier)) (token_tree)))
+  (item (function_item (function_declaration (identifier) (parameters)) (block
+    (macro_invocation (identifier) (token_tree))
+    (macro_invocation (identifier) (token_tree))
+    (macro_invocation (identifier) (token_tree))
+    (macro_invocation (scoped_identifier (identifier) (identifier)) (token_tree))
+    (macro_invocation (scoped_identifier (scoped_identifier (identifier) (identifier)) (identifier)) (token_tree)))))
+  (item (macro_invocation (identifier) (token_tree))))
 
 ============================================
 Macro invocation - arbitrary tokens
 ============================================
 
-a!(* a *);
-a!(& a &);
-a!(- a -);
-a!(b + c + +);
-a!('a'..='z');
-a!('\u{0}'..='\u{2}');
-a!('lifetime)
+fn main() {
+  a!(* a *);
+  a!(& a &);
+  a!(- a -);
+  a!(b + c + +);
+  a!('a'..='z');
+  a!('\u{0}'..='\u{2}');
+  a!('lifetime)
+}
 
 ----
 
 (source_file
-  (macro_invocation
-    (identifier)
-    (token_tree (identifier)))
-  (macro_invocation
-    (identifier)
-    (token_tree (identifier)))
-  (macro_invocation
-    (identifier)
-    (token_tree (identifier)))
-  (macro_invocation
-    (identifier)
-    (token_tree (identifier) (identifier)))
-  (macro_invocation
-    (identifier)
-    (token_tree (char_literal) (char_literal)))
-  (macro_invocation
-    (identifier)
-    (token_tree (char_literal) (char_literal)))
-  (macro_invocation
-    (identifier)
-    (token_tree (identifier))))
+  (item (function_item (function_declaration (identifier) (parameters)) (block
+    (macro_invocation
+      (identifier)
+      (token_tree (identifier)))
+    (macro_invocation
+      (identifier)
+      (token_tree (identifier)))
+    (macro_invocation
+      (identifier)
+      (token_tree (identifier)))
+    (macro_invocation
+      (identifier)
+      (token_tree (identifier) (identifier)))
+    (macro_invocation
+      (identifier)
+      (token_tree (char_literal) (char_literal)))
+    (macro_invocation
+      (identifier)
+      (token_tree (char_literal) (char_literal)))
+    (macro_invocation
+      (identifier)
+      (token_tree (identifier)))))))
 
 ============================================
 Macro definition
@@ -90,22 +99,22 @@ macro_rules! zero_or_one {
 ----
 
 (source_file
-  (macro_definition
+  (item (macro_definition
     name: (identifier)
     (macro_rule
       left: (token_tree_pattern)
       right: (token_tree
         (identifier)
         (token_tree
-          (string_literal)))))
-  (macro_definition
+          (string_literal))))))
+  (item (macro_definition
     name: (identifier)
     (macro_rule
       left: (token_tree_pattern)
       right: (token_tree
         (integer_literal)
-        (integer_literal))))
-  (macro_definition
+        (integer_literal)))))
+  (item (macro_definition
     name: (identifier)
     (macro_rule
       left: (token_tree_pattern
@@ -128,8 +137,8 @@ macro_rules! zero_or_one {
         (identifier)
         (token_tree
           (string_literal)
-          (metavariable)))))
-  (macro_definition
+          (metavariable))))))
+  (item (macro_definition
     name: (identifier)
     (macro_rule
       left: (token_tree_pattern
@@ -146,8 +155,8 @@ macro_rules! zero_or_one {
         (token_repetition
           (token_repetition
             (metavariable)
-            (metavariable))))))
-  (macro_definition
+            (metavariable)))))))
+  (item (macro_definition
     name: (identifier)
     (macro_rule
       left: (token_tree_pattern
@@ -157,4 +166,4 @@ macro_rules! zero_or_one {
             type: (fragment_specifier))))
       right: (token_tree
         (token_repetition
-          (metavariable))))))
+          (metavariable)))))))

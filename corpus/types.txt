@@ -7,7 +7,7 @@ type A = ();
 ---
 
 (source_file
-  (type_item (type_identifier) (unit_type)))
+  (item (type_item (type_identifier) (unit_type))))
 
 =====================
 Tuple types
@@ -18,7 +18,7 @@ type A = (i32, String);
 ---
 
 (source_file
-  (type_item (type_identifier) (tuple_type (primitive_type) (type_identifier))))
+  (item (type_item (type_identifier) (tuple_type (primitive_type) (type_identifier)))))
 
 =====================
 Reference types
@@ -31,9 +31,9 @@ type D = &'a mut str;
 ---
 
 (source_file
-  (type_item (type_identifier) (reference_type (type_identifier)))
-  (type_item (type_identifier) (reference_type (lifetime (identifier)) (primitive_type)))
-  (type_item (type_identifier) (reference_type (lifetime (identifier)) (mutable_specifier) (primitive_type))))
+  (item (type_item (type_identifier) (reference_type (type_identifier))))
+  (item (type_item (type_identifier) (reference_type (lifetime (identifier)) (primitive_type))))
+  (item (type_item (type_identifier) (reference_type (lifetime (identifier)) (mutable_specifier) (primitive_type)))))
 
 =====================
 Raw pointer types
@@ -45,8 +45,8 @@ type C = *const str;
 ---
 
 (source_file
-  (type_item (type_identifier) (pointer_type (mutable_specifier) (type_identifier)))
-  (type_item (type_identifier) (pointer_type  (primitive_type))))
+  (item (type_item (type_identifier) (pointer_type (mutable_specifier) (type_identifier))))
+  (item (type_item (type_identifier) (pointer_type  (primitive_type)))))
 
 =====================
 Generic types
@@ -60,18 +60,18 @@ type J = H<K=L>;
 ---
 
 (source_file
-  (type_item
+  (item (type_item
     (type_identifier)
-    (generic_type (type_identifier) (type_arguments (type_identifier))))
-  (type_item
+    (generic_type (type_identifier) (type_arguments (type_identifier)))))
+  (item (type_item
     (type_identifier)
-    (generic_type (type_identifier) (type_arguments (type_identifier) (primitive_type))))
-  (type_item
+    (generic_type (type_identifier) (type_arguments (type_identifier) (primitive_type)))))
+  (item (type_item
     (type_identifier)
-    (generic_type (type_identifier) (type_arguments (lifetime (identifier)) (type_identifier))))
-  (type_item
+    (generic_type (type_identifier) (type_arguments (lifetime (identifier)) (type_identifier)))))
+  (item (type_item
     (type_identifier)
-    (generic_type (type_identifier) (type_arguments (type_binding (type_identifier) (type_identifier))))))
+    (generic_type (type_identifier) (type_arguments (type_binding (type_identifier) (type_identifier)))))))
 
 =====================
 Scoped types
@@ -85,22 +85,22 @@ type L = M<N>::O;
 ---
 
 (source_file
-  (type_item
+  (item (type_item
     (type_identifier)
-    (scoped_type_identifier (identifier) (type_identifier)))
-  (type_item
+    (scoped_type_identifier (identifier) (type_identifier))))
+  (item (type_item
     (type_identifier)
-    (scoped_type_identifier (scoped_identifier (identifier) (identifier)) (type_identifier)))
-  (type_item
+    (scoped_type_identifier (scoped_identifier (identifier) (identifier)) (type_identifier))))
+  (item (type_item
     (type_identifier)
     (generic_type
       (scoped_type_identifier (identifier) (type_identifier))
-      (type_arguments (type_identifier))))
-  (type_item
+      (type_arguments (type_identifier)))))
+  (item (type_item
     (type_identifier)
     (scoped_type_identifier
       (generic_type (type_identifier) (type_arguments (type_identifier)))
-      (type_identifier))))
+      (type_identifier)))))
 
 =====================
 Array types
@@ -112,8 +112,8 @@ type C = &[D];
 ---
 
 (source_file
-  (type_item (type_identifier) (array_type (type_identifier) (integer_literal)))
-  (type_item (type_identifier) (reference_type (array_type (type_identifier)))))
+  (item (type_item (type_identifier) (array_type (type_identifier) (integer_literal))))
+  (item (type_item (type_identifier) (reference_type (array_type (type_identifier))))))
 
 ============================
 Function types
@@ -134,32 +134,36 @@ type F = for<'a, 'b> fn(x: &'a A, y: &'a mut B<'i, 't>,) -> C;
 ---
 
 (source_file
-  (function_item
-    (identifier)
-    (parameters
-      (parameter (identifier) (primitive_type))
-      (parameter (identifier) (function_type (parameters (primitive_type)))))
-    (primitive_type)
-    (block))
-  (function_item
-    (identifier)
-    (parameters
-      (parameter (identifier) (primitive_type))
-      (parameter (identifier) (function_type (parameters (primitive_type)) (primitive_type))))
-    (primitive_type)
-    (block (call_expression (identifier) (arguments (identifier)))))
-  (function_item
-    (identifier)
-    (parameters
-      (parameter (identifier) (primitive_type))
-      (parameter (identifier) (reference_type (function_type (type_identifier) (parameters (primitive_type)) (primitive_type)))))
-    (primitive_type) (block (call_expression (identifier) (arguments (identifier)))))
-  (type_item
+  (item (function_item
+    (function_declaration
+      (identifier)
+      (parameters
+        (parameter (identifier) (primitive_type))
+        (parameter (identifier) (function_type (parameters (primitive_type)))))
+      (primitive_type))
+    (block)))
+  (item (function_item
+    (function_declaration
+      (identifier)
+      (parameters
+        (parameter (identifier) (primitive_type))
+        (parameter (identifier) (function_type (parameters (primitive_type)) (primitive_type))))
+      (primitive_type))
+    (block (call_expression (identifier) (arguments (identifier))))))
+  (item (function_item
+    (function_declaration
+      (identifier)
+      (parameters
+        (parameter (identifier) (primitive_type))
+        (parameter (identifier) (reference_type (function_type (type_identifier) (parameters (primitive_type)) (primitive_type)))))
+      (primitive_type))
+    (block (call_expression (identifier) (arguments (identifier))))))
+  (item (type_item
     (type_identifier)
     (function_type
       (for_lifetimes (lifetime (identifier)) (lifetime (identifier)))
       (parameters (parameter (identifier) (reference_type (lifetime (identifier)) (type_identifier))) (parameter (identifier) (reference_type (lifetime (identifier)) (mutable_specifier) (generic_type (type_identifier) (type_arguments (lifetime (identifier)) (lifetime (identifier)))))))
-      (type_identifier))))
+      (type_identifier)))))
 
 =================================
 Unsafe and extern function types
@@ -171,17 +175,17 @@ type b = unsafe extern "C" fn() -> *mut c_void;
 ---
 
 (source_file
-  (type_item
+  (item (type_item
     (type_identifier)
     (function_type
       (function_modifiers (extern_modifier (string_literal)))
-      (parameters (pointer_type (mutable_specifier) (type_identifier)))))
-  (type_item
+      (parameters (pointer_type (mutable_specifier) (type_identifier))))))
+  (item (type_item
     (type_identifier)
     (function_type
       (function_modifiers (extern_modifier (string_literal)))
       (parameters)
-      (pointer_type (mutable_specifier) (type_identifier)))))
+      (pointer_type (mutable_specifier) (type_identifier))))))
 
 ===================================
 Trait objects
@@ -194,44 +198,49 @@ type c = A<&dyn Fn(&B) -> C>;
 ---
 
 (source_file
-  (type_item
+  (item (type_item
     (type_identifier)
     (generic_type
       (type_identifier)
-      (type_arguments (bounded_type (type_identifier) (lifetime (identifier))))))
-  (type_item
+      (type_arguments (bounded_type (type_identifier) (lifetime (identifier)))))))
+  (item (type_item
     (type_identifier)
     (generic_type
       (type_identifier)
-      (type_arguments (dynamic_type (type_identifier)))))
-  (type_item
+      (type_arguments (dynamic_type (type_identifier))))))
+  (item (type_item
     (type_identifier)
     (generic_type
       (type_identifier)
       (type_arguments
         (reference_type
-          (dynamic_type (function_type (type_identifier) (parameters (reference_type (type_identifier))) (type_identifier))))))))
+          (dynamic_type (function_type (type_identifier) (parameters (reference_type (type_identifier))) (type_identifier)))))))))
 
 ====================================
 Type cast expressions with generics
 ====================================
 
-a as B<C>;
-d as *mut E<<F as E>::G>;
+fn main() {
+  a as B<C>;
+  d as *mut E<<F as E>::G>;
+}
 
 ---
 
 (source_file
-  (type_cast_expression
-    (identifier)
-    (generic_type (type_identifier) (type_arguments (type_identifier))))
-  (type_cast_expression
-    (identifier)
-    (pointer_type
-      (mutable_specifier)
-      (generic_type
-        (type_identifier)
-        (type_arguments
-          (scoped_type_identifier
-            (bracketed_type (qualified_type (type_identifier) (type_identifier)))
-          (type_identifier)))))))
+  (item (function_item
+    (function_declaration (identifier) (parameters))
+    (block
+      (type_cast_expression
+        (identifier)
+        (generic_type (type_identifier) (type_arguments (type_identifier))))
+      (type_cast_expression
+        (identifier)
+        (pointer_type
+          (mutable_specifier)
+          (generic_type
+            (type_identifier)
+            (type_arguments
+              (scoped_type_identifier
+                (bracketed_type (qualified_type (type_identifier) (type_identifier)))
+              (type_identifier))))))))))

@@ -11,61 +11,76 @@ async fn main() {
 ---
 
 (source_file
-  (function_item
+  (item (function_item
     (function_modifiers)
-    (identifier)
-    (parameters)
-    (block))
-  (function_item (function_modifiers) (identifier) (parameters)
+    (function_declaration
+      (identifier)
+      (parameters))
+    (block)))
+  (item (function_item
+    (function_modifiers)
+    (function_declaration (identifier) (parameters))
     (block
       (let_declaration (identifier) (try_expression
-        (await_expression (identifier)))))))
+        (await_expression (identifier))))))))
 
 ============================================
 Await expression
 ============================================
 
-futures.await;
-futures.await?;
-futures.await?.await?;
-futures.await?.function().await?;
+async fn main() {
+  futures.await;
+  futures.await?;
+  futures.await?.await?;
+  futures.await?.function().await?;
+}
 
 ---
 
 (source_file
-  (await_expression (identifier))
-  (try_expression
-    (await_expression (identifier)))
-  (try_expression
-    (await_expression
+  (item (function_item
+    (function_modifiers)
+    (function_declaration (identifier) (parameters))
+    (block
+      (await_expression (identifier))
       (try_expression
-        (await_expression (identifier)))))
-  (try_expression
-    (await_expression
-      (call_expression
-        (field_expression
+        (await_expression (identifier)))
+      (try_expression
+        (await_expression
           (try_expression
-            (await_expression (identifier)))
-          (field_identifier))
-        (arguments)))))
+            (await_expression (identifier)))))
+      (try_expression
+        (await_expression
+          (call_expression
+            (field_expression
+              (try_expression
+                (await_expression (identifier)))
+              (field_identifier))
+            (arguments))))))))
 
 ============================================
 Async Block
 ============================================
 
-async {}
-async { let x = 10; }
-async move {}
+async fn main() {
+  async {}
+  async { let x = 10; }
+  async move {}
+}
 
 ---
 
 (source_file
-  (async_block
-    (block))
-  (async_block
+  (item (function_item
+    (function_modifiers)
+    (function_declaration (identifier) (parameters))
     (block
-      (let_declaration
-        (identifier)
-        (integer_literal))))
-  (async_block
-    (block)))
+      (async_block
+        (block))
+      (async_block
+        (block
+          (let_declaration
+            (identifier)
+            (integer_literal))))
+      (async_block
+        (block))))))
