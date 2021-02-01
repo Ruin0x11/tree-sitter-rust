@@ -286,26 +286,26 @@ use my::{*};
   (item (use_declaration
     argument: (identifier)))
   (item (use_declaration
-    argument: (scoped_identifier
+    argument: (simple_scoped_identifier
       path: (identifier)
       name: (identifier))))
   (item (use_declaration
-    argument: (scoped_identifier
-      path: (scoped_identifier
+    argument: (simple_scoped_identifier
+      path: (simple_scoped_identifier
         path: (identifier)
         name: (identifier))
       name: (identifier))))
   (item (use_declaration
     argument: (use_as_clause
-      path: (scoped_identifier
-        path: (scoped_identifier
+      path: (simple_scoped_identifier
+        path: (simple_scoped_identifier
           path: (identifier)
           name: (identifier))
         name: (identifier))
       alias: (identifier))))
   (item (use_declaration
     argument: (scoped_use_list
-      path: (scoped_identifier
+      path: (simple_scoped_identifier
         path: (identifier)
         name: (identifier))
       list: (use_list
@@ -313,22 +313,22 @@ use my::{*};
         (identifier)))))
   (item (use_declaration
     argument: (use_wildcard
-      (scoped_identifier
-        path: (scoped_identifier
+      (simple_scoped_identifier
+        path: (simple_scoped_identifier
           path: (identifier)
           name: (identifier))
         name: (identifier)))))
   (item
     (visibility_modifier)
     (use_declaration
-      argument: (scoped_identifier
-        path: (scoped_identifier
+      argument: (simple_scoped_identifier
+        path: (simple_scoped_identifier
           path: (self)
           name: (identifier))
         name: (identifier))))
   (item (use_declaration
     argument: (scoped_use_list
-      path: (scoped_identifier
+      path: (simple_scoped_identifier
         path: (identifier)
         name: (identifier))
       list: (use_list
@@ -786,7 +786,7 @@ struct Bar;
   (inner_attribute_item (meta_item
     (identifier)
     arguments: (meta_arguments (meta_item
-      (scoped_identifier
+      (simple_scoped_identifier
         path: (identifier)
         name: (identifier))))))
 
@@ -825,7 +825,7 @@ struct Bar;
 
   (item
     (outer_attribute_item (meta_item
-      (scoped_identifier
+      (simple_scoped_identifier
         path: (identifier)
         name: (identifier))
       value: (string_literal)))
@@ -1191,7 +1191,7 @@ pub(in crate::d) fn e() {}
   (item (visibility_modifier (super)) (function_item (function_declaration (identifier) (parameters)) (block)))
   (item (visibility_modifier (self)) (function_item (function_declaration (identifier) (parameters)) (block)))
   (item (visibility_modifier (crate)) (function_item (function_declaration (identifier) (parameters)) (block)))
-  (item (visibility_modifier (scoped_identifier (crate) (identifier)))
+  (item (visibility_modifier (simple_scoped_identifier (crate) (identifier)))
     (function_item
       (function_declaration
         (identifier)

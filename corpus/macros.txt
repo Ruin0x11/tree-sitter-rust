@@ -19,8 +19,8 @@ a!()
     (macro_invocation (identifier) (token_tree))
     (macro_invocation (identifier) (token_tree))
     (macro_invocation (identifier) (token_tree))
-    (macro_invocation (scoped_identifier (identifier) (identifier)) (token_tree))
-    (macro_invocation (scoped_identifier (scoped_identifier (identifier) (identifier)) (identifier)) (token_tree)))))
+    (macro_invocation (simple_scoped_identifier (identifier) (identifier)) (token_tree))
+    (macro_invocation (simple_scoped_identifier (simple_scoped_identifier (identifier) (identifier)) (identifier)) (token_tree)))))
   (item (macro_invocation (identifier) (token_tree))))
 
 ============================================
